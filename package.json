@@ -1,8 +1,8 @@
 {
-  "name": "etaps-wallet",
-  "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "name": "etap-wallet",
+  "version": "1.0.0",
+  "description": "A REST API to mock a basic wallet system",
+  "author": "Uko, God'sgift Matthew",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
@@ -26,6 +26,7 @@
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/typeorm": "^9.0.1",
+    "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.2",
     "dotenv": "^16.0.3",
@@ -41,6 +42,7 @@
     "@nestjs/cli": "^9.0.0",
     "@nestjs/schematics": "^9.0.0",
     "@nestjs/testing": "^9.0.0",
+    "@types/bcryptjs": "^2.4.2",
     "@types/express": "^4.17.13",
     "@types/jest": "28.1.8",
     "@types/node": "^16.0.0",
