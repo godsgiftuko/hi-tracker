@@ -1,9 +1,16 @@
-import { Controller, Req, Post, Get, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Req,
+  Post,
+  Get,
+  Body,
+  Param,
+  Request,
+  HttpStatus,
+} from '@nestjs/common';
 import { CreateUserDto } from './user.dto';
 import { UserService } from './user.service';
-import { Request } from 'express';
 import {
-  E_API_STATUS_CODE,
   E_CONTENT_TYPE,
   E_API_STATUS_MESSAGE,
   HttpRequest,
@@ -17,20 +24,27 @@ export class UserController {
   @Post('new')
   async create(@Body() createUserDto: CreateUserDto) {
     try {
-      const data = await this.usersService.create(createUserDto);
+      const user = await this.usersService.create(createUserDto);
       return {
-        message: E_API_STATUS_MESSAGE.ok,
-        data,
+        statusCode: HttpStatus.CREATED,
+        user,
       };
-    } catch (error: any) {
-      // TODO: Error logging
-      return { error };
+    } catch (error) {
+      throw error;
     }
   }
 
   @Get(':id')
-  show(@Param('id') id: number) {
-    return this.usersService.showById(id);
+  async show(@Param('id') id: number) {
+    try {
+      const user = await this.usersService.getUserById(id);
+      return {
+        statusCode: HttpStatus.OK,
+        user,
+      };
+    } catch (error) {
+      throw error;
+    }
   }
 
   @Get()

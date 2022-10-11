@@ -1,10 +1,12 @@
-@userRoute=http://localhost:6000/api/v1/user
-
-#  @token = {{loginAPI.response.body.token}}.
-POST {{userRoute}}/new
+#  @token = {{loginAPI.response.body.token}}
+POST {{baseUrl}}/user/new
 Content-Type: {{contentType}}
 
 {
-  "phone": "08097303617e",
+  "phone": "080973w0s361743",
   "password": "12345678"
 }
+
+###
+GET {{baseUrl}}/user/1
+Content-Type: {{contentType}}

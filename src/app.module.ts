@@ -3,6 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './modules/user/user.module';
 import { User } from './modules/user/user.entity';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -17,11 +18,12 @@ import { User } from './modules/user/user.entity';
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
         entities: [User],
-        synchronize: true,
+        synchronize: false, //! This will purge the database automatically on server restart if set to => true. Set to => false on production env.
       }),
       inject: [ConfigService],
     }),
     UserModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

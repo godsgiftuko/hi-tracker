@@ -12,7 +12,7 @@ import * as bcrypt from 'bcryptjs';
 import { E_USER_ROLE } from 'src/core/schemas';
 import { PASSWORD_HASH_SALT } from 'src/core/constants';
 
-@Entity('user')
+@Entity('users')
 export class User extends BaseEntity {
   @PrimaryColumn()
   @Generated('increment')

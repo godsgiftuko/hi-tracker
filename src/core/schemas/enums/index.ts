@@ -1,13 +1,3 @@
-export enum E_API_STATUS_CODE {
-  ok = 200,
-  created = 201,
-  deleted = 301,
-  badRequest = 400,
-  notFound = 404,
-  unAuthorized = 403,
-  unProcessableEntity = 422,
-}
-
 export enum E_API_STATUS_MESSAGE {
   ok = 'Success!',
   created = 'Created!',
@@ -23,7 +13,9 @@ export enum E_CONTENT_TYPE {
 export enum E_API_ERR {
   ERR_CODE_DUPLICATE = 'ERR:DUPLICATE',
   ERR_CODE_NOT_FOUND = 'ERR:NOT_FOUND',
+  ERR_CODE_INCORRECT_LOGIN = 'ERR:INCORRECT_LOGIN',
   somethingW = 'Oops! Something went wrong',
+  manyRequest = 'Too many attempts.',
   connectionErr = 'Unable to connect',
   noUser = 'No users',
   notFound = 'Not found',
