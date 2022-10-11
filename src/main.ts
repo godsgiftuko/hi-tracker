@@ -8,6 +8,8 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+  app.setGlobalPrefix(`api/v${configService.get('API_VERSION')}`);
+
   const port = configService.get('SERVER_PORT');
   const nodeEnv = configService.get('NODE_ENV');
 

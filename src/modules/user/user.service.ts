@@ -1,24 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { User } from './user.entity';
 import { CreateUserDto } from './user.dto';
+import { E_API_ERR } from 'src/core/schemas';
 
 @Injectable()
 export class UserService {
   async create(createUserDto: CreateUserDto) {
-    const user = User.create({
-      id: 72727,
-      phone: '09071046909',
-      password: '123456',
-    });
-    // const user = User.create(createUserDto);
-    await user.save();
+    try {
+      console.log({ createUserDto });
+      const { phone } = createUserDto;
+      const userExist = await this.findByPhone(phone);
 
-    delete user.password;
-    return user;
+      if (userExist) {
+        throw {
+          status: E_API_ERR.ERR_CODE_DUPLICATE,
+          message: E_API_ERR.phoneExist,
+        };
+      }
+      const user = User.create({
+        phone: createUserDto.phone,
+        password: createUserDto.password,
+      });
+      // const user = User.create(createUserDto);
+      await user.save();
+
+      delete user.password;
+      return user;
+    } catch (error) {
+      console.log({ error });
+
+      throw error;
+    }
   }
 
   async showById(id: number): Promise<User> {
-    const user = await this.findById(id);
+    const user = await this.findById(+id);
 
     delete user.password;
     return user;
@@ -28,7 +44,7 @@ export class UserService {
     return await User.findOne({ where: { id } });
   }
 
-  async findByEmail(phone: string) {
+  async findByPhone(phone: string) {
     return await User.findOne({
       where: { phone },
     });

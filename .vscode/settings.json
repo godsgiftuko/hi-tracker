@@ -1,0 +1,15 @@
+{
+  "rest-client.environmentVariables": {
+    "$shared": {
+      "authorization": "your-authorization-key",
+      "accessToken": "your-access-token",
+      "contentType": "application/json",
+    },
+    "sandbox": {
+      "baseUrl": "http://localhost:6000/api/v1",
+    },
+    "production": {
+      "baseUrl": "http://localhost:6000/api/v1",
+    }
+  }
+}

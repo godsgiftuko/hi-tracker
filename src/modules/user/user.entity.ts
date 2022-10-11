@@ -4,16 +4,18 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  PrimaryGeneratedColumn,
+  Generated,
+  PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
-import { E_USER_ROLE } from './user.enums';
+import { E_USER_ROLE } from 'src/core/schemas';
 import { PASSWORD_HASH_SALT } from 'src/core/constants';
 
 @Entity('user')
 export class User extends BaseEntity {
-  @PrimaryGeneratedColumn()
+  @PrimaryColumn()
+  @Generated('increment')
   id: number;
 
   @Column({ unique: true })

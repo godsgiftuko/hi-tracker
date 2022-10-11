@@ -2,7 +2,6 @@ export enum E_API_STATUS_CODE {
   ok = 200,
   created = 201,
   deleted = 301,
-  // badRequest = 203
   badRequest = 400,
   notFound = 404,
   unAuthorized = 403,
@@ -22,20 +21,21 @@ export enum E_CONTENT_TYPE {
 }
 
 export enum E_API_ERR {
+  ERR_CODE_DUPLICATE = 'ERR:DUPLICATE',
+  ERR_CODE_NOT_FOUND = 'ERR:NOT_FOUND',
   somethingW = 'Oops! Something went wrong',
-  connectionErr = 'unable to connect',
+  connectionErr = 'Unable to connect',
   noUser = 'No users',
   notFound = 'Not found',
-  unAuthorized = 'Access Denied to the resource!',
+  unAuthorized = 'Access Denied to this resource!',
   wrongLogin = 'Incorrect login credentials',
-  emailExist = 'Sorry! This email is already registered',
-  unRecogEmail = 'Sorry! This email is not valid',
+  phoneExist = 'Sorry! This mobile number is already registered',
+  unRecogPhone = 'Sorry! This mobile number is not valid',
   invalidData = 'Sorry! Request is not valid',
-  updateFailed = 'Sorry! Update failed. Please try again',
   unRecogEntity = 'Unrecognized entity',
   unProcessableData = 'Unprocessable data entry',
-  farmExist = 'Sorry! A farm is already registered with this name',
-  falsyUserClaim = 'Unrecognized access claim. Try re-authorizing',
+  walletExist = 'Sorry! A wallet with this currency exist on your account',
+  falsyAccessClaim = 'Unrecognized access claim. Try re-authorizing',
 }
 
 export enum E_USER_ROLE {
