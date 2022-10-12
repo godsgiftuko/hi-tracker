@@ -120,13 +120,14 @@ export class WalletService {
       }
 
       // Update wallet
+      const credit = amount + walletExist.amount;
       const updateWithDataSource = await this.walletManager.query(`
-        UPDATE wallets SET amount = ${amount} WHERE wallet_owner=${userId} AND curr='${wallet}';
+        UPDATE wallets SET amount = ${credit} WHERE wallet_owner=${userId} AND curr='${wallet}';
       `);
 
       if (updateWithDataSource) {
         delete walletExist.amount;
-        const updatedWallet = { ...walletExist, amount };
+        const updatedWallet = { ...walletExist, credit };
         return {
           statusCode: HttpStatus.OK,
           wallet: updatedWallet,
@@ -138,7 +139,13 @@ export class WalletService {
   }
 
   async makeTransfer({ userId, wallet: curr, to, amount }: TransferFundsDto) {
-    const wallets = await Wallet.find();
+    const wallets = await Wallet.find({
+      relations: {
+        user: true,
+      },
+    });
+    console.log({ ...wallets });
+
     // Check if reciever exist
     const receiverExist = await this.userService.getUserByPhone(to);
 

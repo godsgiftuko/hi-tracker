@@ -46,7 +46,7 @@ Authorization: Bearer {{regToken}}
 
 {
   "operator": "deposit",
-  "amount": 300000,
+  "amount": 800000,
     "wallet": "NGN"
 }
 
@@ -57,9 +57,9 @@ Authorization: Bearer {{regToken}}
 
 {
   "operator": "transfer",
-  "amount": 300000,
+  "amount": 1000000,
     "wallet": "NGN",
-    "to": "090710469w09"
+    "to": "09016000000"
 }
 
 
