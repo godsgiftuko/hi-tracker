@@ -4,7 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UserModule } from './modules/user/user.module';
 import { User } from './modules/user/user.entity';
 import { AuthModule } from './modules/auth/auth.module';
-import { Database } from './modules/database';
+import { WalletModule } from './modules/wallet/wallet.module';
+import { Wallet } from './modules/wallet/wallet.entity';
+import { TransactionModule } from './modules/transaction/transaction.module';
+import { Transaction } from './modules/transaction/transaction.entity';
 
 @Module({
   imports: [
@@ -18,15 +21,17 @@ import { Database } from './modules/database';
         username: configService.get('DB_USER'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_NAME'),
-        entities: [User],
-        synchronize: false, //! This will purge the database automatically on server restart if set to => true. Set to => false on production env.
+        entities: [User, Wallet, Transaction],
+        synchronize: true, //! This will purge the database automatically on server restart if set to => true. Set to => false on production env.
       }),
       inject: [ConfigService],
     }),
     UserModule,
     AuthModule,
+    WalletModule,
+    TransactionModule,
   ],
   controllers: [],
-  providers: [Database],
+  providers: [],
 })
 export class AppModule {}

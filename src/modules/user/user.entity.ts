@@ -7,15 +7,20 @@ import {
   Generated,
   PrimaryColumn,
   UpdateDateColumn,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { E_USER_ROLE } from 'src/core/schemas';
 import { PASSWORD_HASH_SALT } from 'src/core/constants';
+import { Wallet } from '../wallet/wallet.entity';
 
 @Entity('users')
 export class User extends BaseEntity {
-  @PrimaryColumn()
-  @Generated('increment')
+  // @PrimaryColumn()
+  // @Generated('increment')
+  @PrimaryGeneratedColumn('increment')
   id: number;
 
   @Column({ unique: true })
@@ -38,6 +43,10 @@ export class User extends BaseEntity {
     default: E_USER_ROLE.CUSTOMER,
   })
   role: E_USER_ROLE;
+
+  @OneToMany(() => Wallet, (wallet) => wallet.user)
+  @JoinColumn({ name: 'wallet_id' })
+  wallets: Wallet[];
 
   @BeforeInsert()
   async hashPassword() {

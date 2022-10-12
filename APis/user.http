@@ -3,11 +3,11 @@ POST {{baseUrl}}/user/new
 Content-Type: {{contentType}}
 
 {
-  "phone": "09071046909",
+  "phone": "070628489s39",
   "password": "12345678"
 }
 
 ###
-GET {{baseUrl}}/user/1
+GET {{baseUrl}}/user/3
 Content-Type: {{contentType}}
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW4iOiIxZCIsInBob25lIjoiMDkwNzEwNDY5MDkiLCJzdWIiOjksImlhdCI6MTY2NTU2NDc0NCwiZXhwIjoxNjY1NjUxMTQ0fQ.DIvjZ53dWGxYAChYwyptjZefSvLkFzWTqI-VAH86HYQ
+Authorization: {{authorization}}

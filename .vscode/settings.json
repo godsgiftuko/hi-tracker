@@ -1,7 +1,8 @@
 {
   "rest-client.environmentVariables": {
     "$shared": {
-      "authorization": "your-authorization-key",
+      "customerAuthorization": "Bearer ",
+      "adminAuthorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW4iOiIxZCIsInBob25lIjoiMDkwMTYwMDAwMDAiLCJzdWIiOjEyLCJpYXQiOjE2NjU1Njg3NzYsImV4cCI6MTY2NTY1NTE3Nn0.nsSw67ko6iOr0aEURaLsy0kG7hZjQIbasHyvLFzLF-Q",
       "accessToken": "your-access-token",
       "contentType": "application/json",
     },

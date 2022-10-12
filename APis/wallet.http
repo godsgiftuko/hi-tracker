@@ -1,1 +1,13 @@
 
+POST {{baseUrl}}/wallet/new
+Content-Type: {{contentType}}
+Authorization: {{customerAuthorization}}
+
+{
+  "curr": "NGN"
+}
+
+### Only admin
+GET {{baseUrl}}/wallet/all
+Content-Type: {{contentType}}
+Authorization: {{customerAuthorization}}

@@ -30,11 +30,9 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto) {
     try {
-      const { phone } = createUserDto;
       const users = await this.getAllUsers();
-      const userExist = await this.getUserByPhone(phone);
 
-      // Create admin user
+      // Create Admin
       const findAdmin = (user) => user.role === E_USER_ROLE.ADMIN;
       const adminExist = users.find(findAdmin);
 
@@ -48,6 +46,11 @@ export class UserService {
         console.log('Admin created');
       }
 
+      // Create Customer
+      const { phone } = createUserDto;
+      const findCustomer = (user) => user.phone === phone;
+      const userExist = users.find(findCustomer);
+
       if (userExist) {
         throw new ConflictException(E_API_ERR.phoneExist);
       }
@@ -58,9 +61,9 @@ export class UserService {
       });
 
       await user.save();
-
       delete user.password;
 
+      // Generate JWT
       const payload = {
         expiresIn: this.configService.get('JWT_EXPIRES_IN'),
         phone: user.phone,
@@ -107,10 +110,10 @@ export class UserService {
   }
 
   async getAllUsers() {
-    try {
-      return await User.find();
-    } catch (error) {
-      throw new NotFoundException();
-    }
+    return await User.find({
+      relations: {
+        wallets: true,
+      },
+    });
   }
 }

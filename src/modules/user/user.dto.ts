@@ -6,7 +6,7 @@ import {
   Matches,
   IsOptional,
 } from 'class-validator';
-import { E_USER_ROLE } from 'src/core/schemas';
+import { E_USER_ROLE } from '../../core/schemas';
 
 export class CreateUserDto {
   @IsNotEmpty()
