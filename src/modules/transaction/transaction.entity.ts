@@ -4,8 +4,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Generated,
-  PrimaryColumn,
+  JoinColumn,
   UpdateDateColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -33,6 +32,9 @@ export class Transaction extends BaseEntity {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @ManyToOne(() => Wallet, (wallet) => wallet.trx_history)
+  @ManyToOne(() => Wallet, (wallet) => wallet.trx_history, {
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn({ name: 'wallet_id' })
   wallet: Wallet;
 }

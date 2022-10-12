@@ -9,6 +9,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   OneToMany,
+  JoinColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { E_USER_ROLE } from '../../core/schemas';
@@ -36,8 +37,12 @@ export class Wallet extends BaseEntity {
   updatedAt: Date;
 
   @OneToMany(() => Transaction, (transaction) => transaction.wallet)
+  @JoinColumn({ name: 'transaction_histtory' })
   trx_history: Transaction[];
 
-  @ManyToOne(() => User, (user) => user.wallets)
-  user: User;
+  @ManyToOne(() => User, (user) => user.wallets, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'wallet_owner' })
+  user: number;
 }

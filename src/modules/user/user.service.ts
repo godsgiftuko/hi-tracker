@@ -87,7 +87,7 @@ export class UserService {
       delete user.password;
       return user;
     } catch (error) {
-      throw new NotFoundException();
+      throw new NotFoundException(E_API_ERR.userNotFound);
     }
   }
 
@@ -95,7 +95,7 @@ export class UserService {
     try {
       return await User.findOne({ where: { id } });
     } catch (error) {
-      throw new NotFoundException();
+      throw new NotFoundException(E_API_ERR.userNotFound);
     }
   }
 
@@ -105,7 +105,7 @@ export class UserService {
         where: { phone },
       });
     } catch (error) {
-      throw new NotFoundException();
+      throw new NotFoundException(E_API_ERR.userNotFound);
     }
   }
 

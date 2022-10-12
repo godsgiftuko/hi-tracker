@@ -5,30 +5,38 @@ import {
   MinLength,
   Matches,
   IsOptional,
+  ValidateNested,
+  IsPhoneNumber,
+  IsNumberString,
   IsNumber,
 } from 'class-validator';
-import { E_USER_ROLE } from '../../core/schemas';
+import { E_USER_ROLE, E_WALLET_OPERATIORS } from '../../core/schemas';
 import { ALLOWED_CURRENCIES } from '../../core/constants';
 
+interface Deposit {
+  amount: number;
+  wallet: string;
+}
+
 export class CreateWalletDto {
-  // @IsString()
-  // @Matches(
-  //   `^${Object.values(ALLOWED_CURRENCIES)
-  //     .filter((v) => typeof v !== 'number')
-  //     .join('|')}$`,
-  //   'i',
-  // )
-  // curr: ALLOWED_CURRENCIES;
+  @IsOptional()
+  @IsNotEmpty()
+  @IsNumber()
+  userId: number;
 
   @IsNotEmpty()
   @IsString()
   curr: string;
 }
 
-export class WalletDepositDto {
+export class DepositFundsDto {
+  @Matches(E_WALLET_OPERATIORS.DEPOSIT)
+  operator: string;
+
+  @IsOptional()
   @IsNotEmpty()
   @IsNumber()
-  user: number;
+  userId: number;
 
   @IsNotEmpty()
   @IsNumber()
@@ -36,13 +44,28 @@ export class WalletDepositDto {
 
   @IsNotEmpty()
   @IsString()
-  curr: string;
+  wallet: string;
+}
 
-  // @Matches(
-  //   `^${Object.values(ALLOWED_CURRENCIES)
-  //     .filter((v) => typeof v !== 'number')
-  //     .join('|')}$`,
-  //   'i',
-  // )
-  // curr: typeof ALLOWED_CURRENCIES;
+export class TransferFundsDto {
+  @Matches(E_WALLET_OPERATIORS.TRANSFER)
+  operator: string;
+
+  @IsOptional()
+  @IsNotEmpty()
+  @IsNumber()
+  userId: number;
+
+  @IsNotEmpty()
+  @IsPhoneNumber()
+  @IsNumberString()
+  to: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  amount: number;
+
+  @IsNotEmpty()
+  @IsString()
+  wallet: string;
 }

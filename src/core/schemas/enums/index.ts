@@ -18,6 +18,8 @@ export enum E_API_ERR {
   manyRequest = 'Too many attempts.',
   connectionErr = 'Unable to connect',
   noUser = 'No users',
+  userNotFound = 'User not found',
+  invalidReceiver = 'Invalid receiver',
   notFound = 'Not found',
   unAuthorized = 'Access Denied to this resource!',
   wrongLogin = 'Incorrect login credentials',
@@ -27,6 +29,7 @@ export enum E_API_ERR {
   unRecogEntity = 'Unrecognized entity',
   unProcessableData = 'Unprocessable data entry',
   walletExist = 'Sorry! A wallet with this currency exist on your account',
+  walletNotFound = 'Wallet not found',
   falsyAccessClaim = 'Unrecognized access claim. Try re-authorizing',
   missingAdmin = 'Please set admin credentials in .env to proceed',
   invalidCurr = 'Currnecy not allowed',
@@ -37,7 +40,8 @@ export enum E_USER_ROLE {
   CUSTOMER = 'customer',
 }
 
-export enum E_WALLET_OPERATIONS {
+export enum E_WALLET_OPERATIORS {
   DEPOSIT = 'deposit',
   TRANSFER = 'transfer',
+  SWAP = 'swap',
 }

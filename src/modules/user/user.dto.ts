@@ -5,14 +5,16 @@ import {
   MinLength,
   Matches,
   IsOptional,
+  IsNumberString,
+  IsPhoneNumber,
 } from 'class-validator';
 import { E_USER_ROLE } from '../../core/schemas';
 
 export class CreateUserDto {
   @IsNotEmpty()
-  @IsString()
-  // @MaxLength(11)
-  @Length(11)
+  @IsPhoneNumber('NG')
+  @IsNumberString()
+  @Length(11, 11)
   phone: string;
 
   @IsNotEmpty()

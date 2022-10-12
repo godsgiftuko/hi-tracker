@@ -1,7 +1,0 @@
-POST {{baseUrl}}/auth
-Content-Type: {{contentType}}
-
-{
-  "phone": "09071046909",
-  "password": "12345678"
-}

@@ -7,7 +7,7 @@ import {
   IsOptional,
   IsNumber,
 } from 'class-validator';
-import { E_WALLET_OPERATIONS } from '../../core/schemas';
+import { E_WALLET_OPERATIORS } from '../../core/schemas';
 import { ALLOWED_CURRENCIES } from '../../core/constants';
 
 export class CreateTransactionDto {
@@ -28,10 +28,10 @@ export class CreateTransactionDto {
   charge: number;
 
   @Matches(
-    `^${Object.values(E_WALLET_OPERATIONS)
+    `^${Object.values(E_WALLET_OPERATIORS)
       .filter((v) => typeof v !== 'number')
       .join('|')}$`,
     'i',
   )
-  type: typeof E_WALLET_OPERATIONS;
+  type: typeof E_WALLET_OPERATIORS;
 }

@@ -45,7 +45,7 @@ export class User extends BaseEntity {
   role: E_USER_ROLE;
 
   @OneToMany(() => Wallet, (wallet) => wallet.user)
-  @JoinColumn({ name: 'wallet_id' })
+  @JoinColumn({ name: 'user_wallets' })
   wallets: Wallet[];
 
   @BeforeInsert()

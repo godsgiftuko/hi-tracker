@@ -14,7 +14,7 @@ import { CreateUserDto } from './user.dto';
 import { UserService } from './user.service';
 import { E_USER_ROLE } from 'src/core/schemas';
 // import { AuthGuard } from '../auth/auth.guard';
-import { AllowedRoles } from '../auth/roles.decorator';
+import { AllowedRoles } from '../auth/auth.decorator';
 import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('user')
