@@ -28,6 +28,7 @@ export enum E_API_ERR {
   unProcessableData = 'Unprocessable data entry',
   walletExist = 'Sorry! A wallet with this currency exist on your account',
   falsyAccessClaim = 'Unrecognized access claim. Try re-authorizing',
+  missingAdmin = 'Please set admin credentials in .env to proceed',
 }
 
 export enum E_USER_ROLE {

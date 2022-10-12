@@ -7,7 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { User } from './user.entity';
 import { CreateUserDto } from './user.dto';
-import { E_API_ERR } from 'src/core/schemas';
+import { E_API_ERR, E_USER_ROLE } from 'src/core/schemas';
+import { ADMIN_PHONE, ADMIN_PASSWORD } from 'src/core/constants';
 
 @Injectable()
 export class UserService {
@@ -16,14 +17,41 @@ export class UserService {
     private configService: ConfigService,
   ) {}
 
+  private get getCreationInfo() {
+    if (!ADMIN_PHONE || !ADMIN_PASSWORD) {
+      throw new Error(E_API_ERR.missingAdmin);
+    }
+    return {
+      phone: ADMIN_PHONE,
+      password: ADMIN_PASSWORD,
+      role: E_USER_ROLE.ADMIN,
+    };
+  }
+
   async create(createUserDto: CreateUserDto) {
     try {
       const { phone } = createUserDto;
+      const users = await this.getAllUsers();
       const userExist = await this.getUserByPhone(phone);
+
+      // Create admin user
+      const findAdmin = (user) => user.role === E_USER_ROLE.ADMIN;
+      const adminExist = users.find(findAdmin);
+
+      if (!adminExist) {
+        await User.create({
+          phone: this.getCreationInfo.phone,
+          password: this.getCreationInfo.password,
+          role: this.getCreationInfo.role,
+        }).save();
+
+        console.log('Admin created');
+      }
 
       if (userExist) {
         throw new ConflictException(E_API_ERR.phoneExist);
       }
+
       const user = User.create({
         phone: createUserDto.phone,
         password: createUserDto.password,
@@ -73,6 +101,14 @@ export class UserService {
       return await User.findOne({
         where: { phone },
       });
+    } catch (error) {
+      throw new NotFoundException();
+    }
+  }
+
+  async getAllUsers() {
+    try {
+      return await User.find();
     } catch (error) {
       throw new NotFoundException();
     }
