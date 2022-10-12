@@ -3,12 +3,19 @@ import {
   NotFoundException,
   ConflictException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 import { User } from './user.entity';
 import { CreateUserDto } from './user.dto';
 import { E_API_ERR } from 'src/core/schemas';
 
 @Injectable()
 export class UserService {
+  constructor(
+    private jwtTokenService: JwtService,
+    private configService: ConfigService,
+  ) {}
+
   async create(createUserDto: CreateUserDto) {
     try {
       const { phone } = createUserDto;
@@ -25,7 +32,18 @@ export class UserService {
       await user.save();
 
       delete user.password;
-      return user;
+
+      const payload = {
+        expiresIn: this.configService.get('JWT_EXPIRES_IN'),
+        phone: user.phone,
+        sub: user.id,
+      };
+      const access_token = this.jwtTokenService.sign(payload);
+
+      return {
+        user,
+        access_token,
+      };
     } catch (error) {
       throw error;
     }

@@ -42,3 +42,9 @@ export type HttpResponse = {
   next?: any;
   user?: { email: string; role: string };
 };
+
+export type JwtPayload = {
+  expiresIn: string;
+  sub: number;
+  phone: string;
+};

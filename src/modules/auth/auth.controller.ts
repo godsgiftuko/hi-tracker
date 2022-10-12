@@ -1,14 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Request,
-  UseGuards,
-  HttpStatus,
-  Body,
-} from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
-import { E_API_STATUS_MESSAGE, E_API_ERR } from 'src/core/schemas';
+import { Controller, Post, HttpStatus, Body } from '@nestjs/common';
 import { LoginUserDto } from '../user/user.dto';
 import { AuthService } from './auth.service';
 
@@ -16,11 +6,14 @@ import { AuthService } from './auth.service';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  // @UseGuards(AuthGuard('jwt'))
   @Post()
   async login(@Body() user: LoginUserDto) {
     try {
-      const access_token = await this.authService.loginWithCredentials(user);
+      const payload = {
+        phone: user.phone,
+        password: user.password,
+      };
+      const access_token = await this.authService.generateJWT(payload);
       return {
         statusCode: HttpStatus.OK,
         data: { access_token },

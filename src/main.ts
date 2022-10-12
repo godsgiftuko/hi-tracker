@@ -26,7 +26,7 @@ async function bootstrap() {
   app.use(
     rateLimit({
       windowMs: 5 * 60 * 1000, // 10 minutes
-      max: 4, // Limit each IP to 100 requests per `window` (here, per 10 minutes)
+      max: 100, // Limit each IP to 100 requests per `window` (here, per 10 minutes)
       standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
       legacyHeaders: false, // Disable the `X-RateLimit-*` headers,
       skipSuccessfulRequests: false, // The counting will skip all successful requests and just count the errors. Instead of removing rate-limiting, it's better to set this to true to limit the number of times a request fails. Can help prevent against brute-force attacks

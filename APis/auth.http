@@ -2,6 +2,6 @@ POST {{baseUrl}}/auth
 Content-Type: {{contentType}}
 
 {
-  "phone": "0809730361743",
-  "password": "12345s678"
+  "phone": "09071046909",
+  "password": "12345678"
 }

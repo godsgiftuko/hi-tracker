@@ -7,15 +7,15 @@ import {
   Param,
   Request,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { CreateUserDto } from './user.dto';
 import { UserService } from './user.service';
-import {
-  E_CONTENT_TYPE,
-  E_API_STATUS_MESSAGE,
-  HttpRequest,
-  E_API_ERR,
-} from 'src/core/schemas';
+import { E_USER_ROLE } from 'src/core/schemas';
+// import { AuthGuard } from '../auth/auth.guard';
+import { AllowedRoles } from '../auth/roles.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('user')
 export class UserController {
@@ -24,16 +24,19 @@ export class UserController {
   @Post('new')
   async create(@Body() createUserDto: CreateUserDto) {
     try {
-      const user = await this.usersService.create(createUserDto);
+      const data = await this.usersService.create(createUserDto);
       return {
         statusCode: HttpStatus.CREATED,
-        user,
+        ...data,
       };
     } catch (error) {
       throw error;
     }
   }
 
+  @AllowedRoles(E_USER_ROLE.ADMIN)
+  // @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get(':id')
   async show(@Param('id') id: number) {
     try {
