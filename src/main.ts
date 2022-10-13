@@ -5,6 +5,8 @@ import { Logger, ValidationPipe, HttpStatus } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { E_API_ERR } from './core/schemas';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { APP_DESCRIPTION, APP_NAME, APP_VERSION } from './core/constants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +15,16 @@ async function bootstrap() {
 
   const port = configService.get('SERVER_PORT');
   const nodeEnv = configService.get('NODE_ENV');
+
+  // Document with swagger
+  const swaggerConfig = new DocumentBuilder()
+    .setTitle(APP_NAME)
+    .setDescription(APP_DESCRIPTION)
+    .setVersion(APP_VERSION)
+    .build();
+
+  const doc = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('api', app, doc);
 
   // -- Helmet
   app.use(helmet());
