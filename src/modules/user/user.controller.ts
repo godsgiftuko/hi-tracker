@@ -16,9 +16,7 @@ import { E_USER_ROLE } from 'src/core/schemas';
 // import { AuthGuard } from '../auth/auth.guard';
 import { AllowedRoles } from '../auth/auth.decorator';
 import { RolesGuard } from '../auth/roles.guard';
-import { ApiTags, ApiOkResponse } from '@nestjs/swagger';
 
-@ApiOkResponse({ description: 'User created successfully' })
 @Controller('user')
 export class UserController {
   constructor(private readonly usersService: UserService) {}
