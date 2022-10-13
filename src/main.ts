@@ -13,7 +13,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   app.setGlobalPrefix(`api/v${configService.get('API_VERSION')}`);
 
-  const port = configService.get('SERVER_PORT');
+  const port = configService.get('SERVER_PORT') || 3000;
   const nodeEnv = configService.get('NODE_ENV');
 
   // Document with swagger

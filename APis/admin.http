@@ -28,6 +28,6 @@ Authorization: Bearer {{adminToken}}
 
 ### 
 
-GET {{baseUrl}}/transaction/confirm/1
+PUT {{baseUrl}}/transaction/confirm/57
 Content-Type: {{contentType}}
 Authorization: Bearer {{adminToken}}

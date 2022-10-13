@@ -38,17 +38,6 @@ export class WalletController {
     }
   }
 
-  @AllowedRoles(E_USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Get('all')
-  async getWallets() {
-    try {
-      return await this.walletService.getAllWallets();
-    } catch (error) {
-      throw error;
-    }
-  }
-
   @AllowedRoles(E_USER_ROLE.CUSTOMER)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Put()

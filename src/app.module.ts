@@ -26,7 +26,6 @@ import { Transaction } from './modules/transaction/transaction.entity';
       }),
       inject: [ConfigService],
     }),
-    // TypeOrmModule.forFeature([User, Wallet, Transaction]),
     UserModule,
     AuthModule,
     WalletModule,

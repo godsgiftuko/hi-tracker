@@ -8,7 +8,6 @@ import {
   IsNumber,
 } from 'class-validator';
 import { E_TRANSACTION_STATUS, E_WALLET_OPERATIORS } from '../../core/schemas';
-import { ALLOWED_CURRENCIES } from '../../core/constants';
 import { Wallet } from '../wallet/wallet.entity';
 
 export class CreateTransactionDto {

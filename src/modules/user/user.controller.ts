@@ -35,19 +35,4 @@ export class UserController {
       throw error;
     }
   }
-
-  @AllowedRoles(E_USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Get(':id')
-  async show(@Param('id') id: number) {
-    try {
-      const user = await this.usersService.getUserById(id);
-      return {
-        statusCode: HttpStatus.OK,
-        user,
-      };
-    } catch (error) {
-      throw error;
-    }
-  }
 }

@@ -32,16 +32,6 @@ export class TransactionController {
 
   @AllowedRoles(E_USER_ROLE.ADMIN)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Get('awaiting')
-  async getAwaitingTransactions() {
-    try {
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  @AllowedRoles(E_USER_ROLE.ADMIN)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Get('all')
   async getTransactions() {
     try {
