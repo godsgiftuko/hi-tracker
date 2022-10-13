@@ -13,11 +13,6 @@ import {
 import { E_USER_ROLE, E_WALLET_OPERATIORS } from '../../core/schemas';
 import { ALLOWED_CURRENCIES } from '../../core/constants';
 
-interface Deposit {
-  amount: number;
-  wallet: string;
-}
-
 export class CreateWalletDto {
   @IsOptional()
   @IsNotEmpty()
@@ -68,4 +63,8 @@ export class TransferFundsDto {
   @IsNotEmpty()
   @IsString()
   wallet: string;
+
+  @IsNotEmpty()
+  @IsString()
+  desc: string;
 }

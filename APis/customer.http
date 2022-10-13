@@ -9,7 +9,7 @@ POST {{baseUrl}}/auth
 Content-Type: {{contentType}}
 
 {
-  "phone": "08097303617",
+  "phone": "09071046909",
   "password": "12345678"
 }
 
@@ -23,7 +23,7 @@ POST {{baseUrl}}/user/new
 Content-Type: {{contentType}}
 
 {
-  "phone": "09073036221",
+  "phone": "09071046909",
   "password": "12345678"
 }
 
@@ -33,7 +33,7 @@ Content-Type: {{contentType}}
 ###
 POST {{baseUrl}}/wallet/new
 Content-Type: {{contentType}}
-Authorization: Bearer {{regToken}}
+Authorization: Bearer {{loginToken}}
 
 {
   "curr": "EUR"
@@ -42,24 +42,25 @@ Authorization: Bearer {{regToken}}
 ### MAKE DEPOSIT
 PUT {{baseUrl}}/wallet
 Content-Type: {{contentType}}
-Authorization: Bearer {{regToken}}
+Authorization: Bearer {{loginToken}}
 
-{
-  "operator": "deposit",
-  "amount": 800000,
-    "wallet": "NGN"
+{ 
+  "operator": "DEPOSIT",
+  "amount": 100000000,                       
+    "wallet": "EUR"
 }
 
 ### MAKE TRANSFER
 PUT {{baseUrl}}/wallet
 Content-Type: {{contentType}}
-Authorization: Bearer {{regToken}}
+Authorization: Bearer {{loginToken}}
 
 {
-  "operator": "transfer",
+  "operator": "TRANSFER",
   "amount": 1000000,
-    "wallet": "NGN",
-    "to": "09016000000"
+    "wallet": "EUR",
+    "to": "08097303617",
+    "desc": "from me"
 }
 
 

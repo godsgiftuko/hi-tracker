@@ -32,6 +32,7 @@ export enum E_API_ERR {
   walletNotFound = 'Wallet not found',
   falsyAccessClaim = 'Unrecognized access claim. Try re-authorizing',
   missingAdmin = 'Please set admin credentials in .env to proceed',
+  transactionNotFound = 'Transaction not found',
   invalidCurr = 'Currnecy not allowed',
 }
 
@@ -41,7 +42,14 @@ export enum E_USER_ROLE {
 }
 
 export enum E_WALLET_OPERATIORS {
-  DEPOSIT = 'deposit',
-  TRANSFER = 'transfer',
-  SWAP = 'swap',
+  DEPOSIT = 'DEPOSIT',
+  TRANSFER = 'TRANSFER',
+}
+
+export enum E_TRANSACTION_STATUS {
+  SUCCESSFUL = 'SUCCESSFUL',
+  PEDNING = 'PEDNING',
+  AWAITING_CONFIRMATION = 'AWAITING_CONFIRMATION',
+  FAILED = 'FAILED',
+  CANCELLED = 'CANCELLED',
 }

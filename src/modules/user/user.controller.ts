@@ -49,9 +49,4 @@ export class UserController {
       throw error;
     }
   }
-
-  @Get()
-  some(@Req() request: Request) {
-    return request;
-  }
 }

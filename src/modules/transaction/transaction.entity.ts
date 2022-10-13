@@ -15,14 +15,26 @@ import { Wallet } from '../wallet/wallet.entity';
 
 @Entity('transactions')
 export class Transaction extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn()
   id: number;
+
+  @Column()
+  status: string;
+
+  @Column()
+  type: string;
+
+  @Column({ nullable: true })
+  desc: string;
+
+  @Column({ nullable: true })
+  charge: number;
 
   @Column({ default: 0 })
   amount: number;
 
-  @Column()
-  curr: string;
+  @Column({ nullable: true })
+  to: string;
 
   @Column()
   @CreateDateColumn()

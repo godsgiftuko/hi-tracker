@@ -18,3 +18,16 @@ Content-Type: {{contentType}}
 GET {{baseUrl}}/wallet/all
 Content-Type: {{contentType}}
 Authorization: Bearer {{adminToken}}
+
+###
+### TRANSACTION ENDPOINTS
+###
+GET {{baseUrl}}/transaction/all
+Content-Type: {{contentType}}
+Authorization: Bearer {{adminToken}}
+
+### 
+
+GET {{baseUrl}}/transaction/confirm/1
+Content-Type: {{contentType}}
+Authorization: Bearer {{adminToken}}

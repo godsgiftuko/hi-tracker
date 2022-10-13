@@ -13,7 +13,11 @@ import {
 } from '@nestjs/typeorm';
 import { Repository, EntityManager, DataSource } from 'typeorm';
 import { ALLOWED_CURRENCIES, TRANSFER_LIMIT } from 'src/core/constants';
-import { E_API_ERR } from 'src/core/schemas';
+import {
+  E_API_ERR,
+  E_TRANSACTION_STATUS,
+  E_WALLET_OPERATIORS,
+} from 'src/core/schemas';
 import {
   CreateWalletDto,
   DepositFundsDto,
@@ -21,6 +25,8 @@ import {
 } from './wallet.dto';
 import { Wallet } from './wallet.entity';
 import { UserService } from '../user/user.service';
+import { Transaction } from '../transaction/transaction.entity';
+import { TransactionService } from '../transaction/transaction.service';
 
 @Injectable()
 export class WalletService {
@@ -29,7 +35,9 @@ export class WalletService {
     @InjectEntityManager() private walletManager: EntityManager,
     @InjectDataSource() private dataSource: DataSource,
     private readonly userService: UserService,
+    private readonly transactionService: TransactionService,
   ) {}
+
   async create({ curr, userId }: CreateWalletDto) {
     try {
       const user = await this.userService.getUserById(userId);
@@ -38,9 +46,12 @@ export class WalletService {
       if (!ALLOWED_CURRENCIES.includes(curr)) {
         throw new NotAcceptableException(E_API_ERR.invalidCurr);
       }
-      const walletExist = await Wallet.findOne({
-        where: { curr, user: userId },
-      });
+
+      const [walletExist] = await await this.walletManager.query(`
+        SELECT * FROM wallets WHERE curr='${curr}' AND wallet_owner=${userId} 
+      `);
+
+      console.log({ walletExist, userId, curr, user });
 
       // Check for duplicate
       if (walletExist) {
@@ -105,49 +116,67 @@ export class WalletService {
     }
   }
 
-  async makeDeposit({ userId, amount, wallet }: DepositFundsDto) {
+  async makeDeposit({ userId, amount, wallet: curr }: DepositFundsDto) {
     try {
       // Check that requested wallet exist
-      const walletExist = await Wallet.findOne({
-        where: { user: userId, curr: wallet },
-      });
+      const [walletExist] = await await this.walletManager.query(`
+        SELECT * FROM wallets WHERE curr='${curr}' AND wallet_owner=${userId} 
+      `);
 
       if (!walletExist) {
         throw new NotFoundException(E_API_ERR.walletNotFound);
       }
-      if (walletExist.curr !== wallet) {
+      if (walletExist.curr !== curr) {
         throw new NotFoundException(E_API_ERR.walletNotFound);
       }
 
       // Update wallet
       const credit = amount + walletExist.amount;
-      const updateWithDataSource = await this.walletManager.query(`
-        UPDATE wallets SET amount = ${credit} WHERE wallet_owner=${userId} AND curr='${wallet}';
+      const updateWalletWithDataSource = await this.walletManager.query(`
+        UPDATE wallets SET amount = ${credit} WHERE wallet_owner=${userId} AND curr='${curr}';
       `);
 
-      if (updateWithDataSource) {
-        delete walletExist.amount;
-        const updatedWallet = { ...walletExist, credit };
-        return {
-          statusCode: HttpStatus.OK,
-          wallet: updatedWallet,
-        };
+      if (updateWalletWithDataSource) {
+        // Record successful deposit
+        // Notify admiin for confirmation
+        return await this.transactionService.generateReceipt({
+          status: E_TRANSACTION_STATUS.SUCCESSFUL,
+          type: E_WALLET_OPERATIORS.DEPOSIT,
+          amount,
+          desc: E_WALLET_OPERATIORS.DEPOSIT,
+        });
       }
+
+      // Record failed deposit
+      const receipt = await Transaction.create({
+        status: E_TRANSACTION_STATUS.FAILED,
+        type: E_WALLET_OPERATIORS.DEPOSIT,
+        amount,
+        desc: E_WALLET_OPERATIORS.DEPOSIT,
+      });
+
+      receipt.wallet = walletExist.id;
+      await receipt.save();
     } catch (error) {
       throw error;
     }
   }
 
-  async makeTransfer({ userId, wallet: curr, to, amount }: TransferFundsDto) {
+  async makeTransfer({
+    userId,
+    wallet: curr,
+    to: receiverPhone,
+    amount,
+    desc,
+  }: TransferFundsDto) {
     const wallets = await Wallet.find({
       relations: {
         user: true,
       },
     });
-    console.log({ ...wallets });
 
-    // Check if reciever exist
-    const receiverExist = await this.userService.getUserByPhone(to);
+    //* Check if reciever exist
+    const receiverExist = await this.userService.getUserByPhone(receiverPhone);
 
     if (!receiverExist) {
       throw new NotFoundException(E_API_ERR.invalidReceiver);
@@ -155,38 +184,76 @@ export class WalletService {
 
     //* Check that reciever wallet exist
     const findRecieverWallet = (wallet: any) =>
-      wallet.curr === curr && wallet.user.id === to;
+      wallet.curr === curr && wallet.user.phone === receiverPhone;
+    const receiverWallet = wallets.find(findRecieverWallet);
 
-    if (!wallets.find(findRecieverWallet)) {
+    if (!receiverWallet) {
       throw new NotFoundException(E_API_ERR.walletNotFound);
     }
 
     //* Check that sender wallet exist
-    const senderWalletExist = await Wallet.findOne({
-      where: { user: userId, curr },
-    });
-    const findSenderWallet = (wallet: any) => wallet.curr === curr;
+    const findSenderWallet = (wallet: any) =>
+      wallet.curr === curr && wallet.user.id === userId;
+    const senderWallet = wallets.find(findSenderWallet);
 
-    if (!wallets.find(findSenderWallet)) {
+    if (!senderWallet) {
       throw new NotFoundException(E_API_ERR.walletNotFound);
     }
 
-    if (wallets.find(findSenderWallet).curr !== curr) {
-      throw new NotFoundException(E_API_ERR.walletNotFound);
+    //* make transfer
+    // Check that balance is enough for transaction
+    if (amount >= senderWallet.amount) {
+      throw new NotAcceptableException('Insufficient funds');
     }
 
-    // make transfer
-
-    // update sender wallet
-    const debit = amount;
-    // update reciever wallet
-
-    // create transaction record
-
-    // Check for transfer limit
+    //* Check transfer limit
     if (amount >= TRANSFER_LIMIT) {
-      // Notify admiin for confirmation
-      console.log('please wait while we confirm this transfer');
+      // Check for transfer limit
+      return await this.transactionService.generateReceipt({
+        status: E_TRANSACTION_STATUS.AWAITING_CONFIRMATION,
+        type: E_WALLET_OPERATIORS.TRANSFER,
+        amount,
+        to: receiverPhone,
+        desc,
+        curr,
+        senderWallet,
+      });
     }
+
+    //* update wallets
+    const debitBal = senderWallet.amount - amount;
+    const creditBal = receiverWallet.amount - amount;
+
+    const [, updateSenderWallet] = await this.walletManager.query(`
+        UPDATE wallets SET amount = ${debitBal} WHERE wallet_owner=${userId} AND curr='${curr}';
+      `);
+
+    const [, updateReceiverWallet] = await this.walletManager.query(`
+        UPDATE wallets SET amount = ${creditBal} WHERE wallet_owner=${receiverExist.id} AND curr='${curr}';
+      `);
+
+    //* Record successful transfer
+    if (updateSenderWallet && updateReceiverWallet) {
+      return await this.transactionService.generateReceipt({
+        status: E_TRANSACTION_STATUS.SUCCESSFUL,
+        type: E_WALLET_OPERATIORS.TRANSFER,
+        amount,
+        to: receiverPhone,
+        desc,
+        curr,
+        senderWallet,
+      });
+    }
+
+    // Record failed transfer
+    return await this.transactionService.generateReceipt({
+      status: E_TRANSACTION_STATUS.FAILED,
+      type: E_WALLET_OPERATIORS.TRANSFER,
+      amount,
+      to: receiverPhone,
+      desc,
+      curr,
+      senderWallet,
+    });
   }
 }

@@ -19,13 +19,13 @@ import { User } from '../user/user.entity';
 
 @Entity('wallets')
 export class Wallet extends BaseEntity {
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ default: 0 })
   amount: number;
 
-  @Column({ unique: true })
+  @Column()
   curr: string;
 
   @Column()

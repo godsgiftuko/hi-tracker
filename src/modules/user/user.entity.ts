@@ -20,7 +20,7 @@ import { Wallet } from '../wallet/wallet.entity';
 export class User extends BaseEntity {
   // @PrimaryColumn()
   // @Generated('increment')
-  @PrimaryGeneratedColumn('increment')
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ unique: true })

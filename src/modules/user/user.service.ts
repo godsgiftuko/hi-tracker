@@ -103,6 +103,9 @@ export class UserService {
     try {
       return await User.findOne({
         where: { phone },
+        relations: {
+          wallets: true,
+        },
       });
     } catch (error) {
       throw new NotFoundException(E_API_ERR.userNotFound);
