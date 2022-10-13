@@ -45,7 +45,7 @@ POST /auth
 
 ```javascript
 Content-Type: application/json
-Authorization: Bearer {{ACCESS_TOKEN}}
+Authorization: Bearer {{access_token}}
 
 {
   "phone" : string,
@@ -64,7 +64,7 @@ Many API endpoints return the JSON representation of the resources created or ed
   {
   "statusCode": 200,
   "data": {
-        "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW4iOiIxZCIsInBob25lIjoiMDkwMzAwMDAwMDAiLCJzdWIiOjMsImlhdCI6MTY2NTY1NTQ3NywiZXhwIjoxNjY1NzQxODc3fQ.sgUA64oCjhUYfU7P5_qugiLukzKj9R_rDvmLXkimdZO"
+        "access_token": string
       }
     }
 }
@@ -97,6 +97,21 @@ This endpoint manages user creation.
 POST /user/new
 ```
 
+```javascript
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "phone" : string,
+  "password" : string
+}
+```
+
+| Field      | Description                 |
+| :--------- | :-------------------------- |
+| `phone`    | **Required**. User phone    |
+| `password` | **Required**. User password |
+
 ## Responses
 
 ### Success
@@ -111,7 +126,7 @@ POST /user/new
     "updatedAt": date,
     "role": string
   },
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHBpcmVzSW4iOiIxZCIsInBob25lIjoiMDkwMzAwMDAwMDAiLCJzdWIiOjMsImlhdCI6MTY2NTY1NTQ3NywiZXhwIjoxNjY1NzQxODc3fQ.sgUA64oCjhUYfU7P5_qugiLukzKj9R_rDvmLXkimdZO"
+  "access_token": string
 }
 ```
 
@@ -134,9 +149,25 @@ This endpoint manages wallet activities.
 POST /wallet/new
 ```
 
+```javascript
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "curr": string
+}
+```
+
+| Field  | Description                               | Enum            |
+| :----- | :---------------------------------------- | :-------------- |
+| `curr` | **Required**. Currency specifies a wallet | NGN , EUR , USD |
+
+## Responses
+
 ### Success
 
 ```javascript
+{
  "statusCode": 201,
   "wallet": {
     "curr": string,
@@ -158,6 +189,106 @@ POST /wallet/new
   "error": "Conflict"
 }
 ```
+
+### DEPOSIT
+
+```http
+PUT /wallet
+```
+
+```javascript
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "operator": string,
+  "amount": number,
+  "wallet": string
+}
+```
+
+| Field      | Description                               | Enum               |
+| :--------- | :---------------------------------------- | :----------------- |
+| `operator` | **Required**. Currency specifies a wallet | DEPOSIT , TRANSFER |
+| `amount`   | **Required**. Transaction amount          |
+| `wallet`   | **Required**. Currency specifies a wallet | NGN , EUR , USD    |
+
+## Response
+
+### Success
+
+```javascript
+
+  "statusCode": 200,
+  "receipt": {
+    "status": string,
+    "type": string,
+    "amount": number,
+    "desc": null,
+    "charge": null,
+    "to": null,
+    "id": number,
+    "createdAt": string,
+    "updatedAt": string
+  }
+}
+```
+
+### TRANSFER
+
+```http
+PUT /wallet
+```
+
+```javascript
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "operator": string,
+  "amount": number,
+  "wallet": string,
+  "to": string,
+  "desc": string
+}
+```
+
+| Field      | Description                               | Enum               |
+| :--------- | :---------------------------------------- | :----------------- |
+| `operator` | **Required**. Currency specifies a wallet | DEPOSIT , TRANSFER |
+| `amount`   | **Required**. Transaction amount          |
+| `wallet`   | **Required**. Currency specifies a wallet | NGN , EUR , USD    |
+| `to`       | **Required**. Receiver's phone number     |
+| `desc`     | **Required**. Transaction descriptiom     |
+
+### Invalid wallet
+
+```javascript
+{
+  "statusCode": 404,
+  "message": "Wallet not found",
+  "error": "Not Found"
+}
+```
+
+## Transaction Endpoint
+
+This endpoint manages wallet activities.
+
+### Confirm transaction
+
+```http
+PUT /transaction/confirm/:id
+```
+
+```javascript
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+```
+
+| Field | Description                  |
+| :---- | :--------------------------- |
+| `id`  | **Required**. Transaction id |
 
 ## Status Codes
 
