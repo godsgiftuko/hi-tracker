@@ -9,9 +9,9 @@ import { E_API_ERR } from './core/schemas';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-  app.setGlobalPrefix(`api/v${configService.get('API_VERSION')}`);
+  app.setGlobalPrefix(`api/v${configService.get('API_VERSION') || 1}`);
 
-  const port = configService.get('SERVER_PORT') || 3000;
+  const port = process.env.PORT || configService.get('SERVER_PORT') || 3000;
   const nodeEnv = configService.get('NODE_ENV');
 
   // -- Helmet

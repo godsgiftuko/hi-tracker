@@ -14,6 +14,10 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
+  getHealth(): string {
+    return 'Health is okay';
+  }
+
   async validateUserCredentials(phone: string, password: string): Promise<any> {
     try {
       const user = await this.userService.getUserByPhone(phone);
