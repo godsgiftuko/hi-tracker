@@ -8,6 +8,7 @@ import { WalletModule } from './modules/wallet/wallet.module';
 import { Wallet } from './modules/wallet/wallet.entity';
 import { TransactionModule } from './modules/transaction/transaction.module';
 import { Transaction } from './modules/transaction/transaction.entity';
+import { HealthController } from './modules/health/health.controller';
 
 @Module({
   imports: [
@@ -31,7 +32,7 @@ import { Transaction } from './modules/transaction/transaction.entity';
     WalletModule,
     TransactionModule,
   ],
-  controllers: [],
+  controllers: [HealthController],
   providers: [],
 })
 export class AppModule {}
