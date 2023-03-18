@@ -40,9 +40,12 @@ export class Wallet extends BaseEntity {
   @JoinColumn({ name: 'transaction_histtory' })
   trx_history: Transaction[];
 
+  @Column()
+  userId: number;
+
   @ManyToOne(() => User, (user) => user.wallets, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'wallet_owner' })
-  user: number;
+  user: User;
 }

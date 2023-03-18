@@ -32,6 +32,8 @@ import { TransactionService } from '../transaction/transaction.service';
 export class WalletService {
   constructor(
     @InjectRepository(Wallet) private walletRepository: Repository<Wallet>,
+    @InjectRepository(Transaction)
+    private txnRepository: Repository<Transaction>,
     @InjectEntityManager() private walletManager: EntityManager,
     @InjectDataSource() private dataSource: DataSource,
     private readonly userService: UserService,
@@ -59,11 +61,11 @@ export class WalletService {
       }
 
       // Create wallet
-      const wallet = Wallet.create({
+      const wallet = await this.walletRepository.create({
         curr,
       });
 
-      wallet.user = user.id;
+      wallet.userId = userId;
       await wallet.save();
 
       return {
@@ -76,35 +78,26 @@ export class WalletService {
 
   async getWalletByCurr(curr: string): Promise<Wallet> {
     try {
-      return await Wallet.findOne({
+      return await this.walletRepository.findOne({
         where: { curr },
-        relations: {
-          trx_history: true,
-          user: true,
-        },
+        relations: ['user', 'trx_history'],
       });
     } catch (error) {
       throw new ForbiddenException();
     }
   }
 
-  async getWalletByUserId(id: number): Promise<Wallet> {
-    return await Wallet.findOne({
-      where: { user: id },
-      relations: {
-        trx_history: true,
-        user: true,
-      },
+  async getWalletByUserId(userId: number): Promise<Wallet> {
+    return await this.walletRepository.findOne({
+      where: { userId },
+      relations: ['user', 'trx_history'],
     });
   }
 
   async getAllWallets() {
     try {
-      const wallets = await Wallet.find({
-        relations: {
-          trx_history: true,
-          user: true,
-        },
+      const wallets = await this.walletRepository.find({
+        relations: ['user', 'trx_history'],
       });
       return {
         statusCode: HttpStatus.OK,
@@ -148,7 +141,7 @@ export class WalletService {
       }
 
       // Record failed deposit
-      const receipt = await Transaction.create({
+      const receipt = await this.txnRepository.create({
         status: E_TRANSACTION_STATUS.FAILED,
         type: E_WALLET_OPERATIORS.DEPOSIT,
         amount,
@@ -169,10 +162,8 @@ export class WalletService {
     amount,
     desc,
   }: TransferFundsDto) {
-    const wallets = await Wallet.find({
-      relations: {
-        user: true,
-      },
+    const wallets = await this.walletRepository.find({
+      relations: ['user'],
     });
 
     //* Check if reciever exist
