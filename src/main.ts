@@ -100,17 +100,7 @@ export async function bootstrap(): Promise<NestExpressApplication> {
   }
 
   const port = configService.appConfig.port;
-  const vite = await app.listen(port);
-
-  if (process.env.NODE_ENV === "development") {
-    // await vite.init(
-    //   VitePluginNode({
-    //     configFile: false,
-    //     base: "./",
-    //     root: __dirname,
-    //   })
-    // );
-  }
+  await app.listen(port);
 
   console.info(`server running on ${await app.getUrl()}`);
 
